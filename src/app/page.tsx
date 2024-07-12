@@ -31,7 +31,7 @@ export default async function Index() {
       </nav>
 
       <footer className="w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">
-        I'M DEV
+        I'M DEV, please
         <ThemeToggle />
       </footer>
     </div>
