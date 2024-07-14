@@ -1,14 +1,14 @@
 'use client'
 
-import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
-import { useTheme } from 'next-themes'
-import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@radix-ui/react-dropdown-menu'
+import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
+import { useTheme } from 'next-themes'
+import { Button } from './ui/button'
 
 type ThemeToggleProps = {
   side?: 'left' | 'top' | 'right' | 'bottom'
