@@ -10,7 +10,17 @@ datasource db {
 }
 
 model Post {
-  id      Int     @id @default(autoincrement())
-  title   String?
-  content String?
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String
+  subjectId Int
+  subject   Subject @relation(fields: [subjectId], references: [id])
+}
+
+model Subject {
+  id       Int    @id @default(autoincrement())
+  name     String
+  code     String
+  semester Int
+  posts    Post[]
 }
