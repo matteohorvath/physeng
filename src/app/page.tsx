@@ -21,10 +21,16 @@ export default async function Index() {
     <div className="flex w-full flex-1 flex-col items-center gap-20">
       <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
         <div className="flex w-full max-w-4xl items-center justify-between p-3 text-sm">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center ">
             Physeng
             <div>
-              <Image src="/logo.svg" height={16} width={32} alt="logo" />
+              <Image
+                src="/logo.svg"
+                height={16}
+                width={32}
+                alt="logo"
+                className=" -rotate-90"
+              />
             </div>
           </div>
           <AuthButton />

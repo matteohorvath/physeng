@@ -24,6 +24,7 @@ export async function POST(request: Request) {
         content,
         subject: { connect: { id: parseInt(subjectId) } },
         type: PostType.EXAM,
+        authorId: user.id,
       },
     })
     return NextResponse.json({ post })
