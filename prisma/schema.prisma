@@ -10,11 +10,12 @@ datasource db {
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   title     String
   content   String
   subjectId Int
-  subject   Subject @relation(fields: [subjectId], references: [id])
+  type      PostType
+  subject   Subject  @relation(fields: [subjectId], references: [id])
 }
 
 model Subject {
@@ -23,4 +24,10 @@ model Subject {
   code     String
   semester Int
   posts    Post[]
+}
+
+enum PostType {
+  EXAM
+  PROBLEM_SHEET
+  TEST
 }

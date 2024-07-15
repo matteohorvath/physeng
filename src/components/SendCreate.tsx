@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Subject } from '@prisma/client'
+import { DialogFooter } from './ui/dialog'
 
 export function SendCreate({
   setRefresh,
@@ -22,16 +23,25 @@ export function SendCreate({
   const contentRef = useRef<HTMLInputElement>(null)
   const [subjectId, setSubjectId] = useState<string | null>(null)
   const [subjects, setSubjects] = useState<Subject[]>([])
+  const [semesters, setSemesters] = useState<number[]>([])
+
+  function listOfSemesters(subjects: Subject[]) {
+    const semesters = subjects.map((subject) => subject.semester)
+    const uniqueSemesters = Array.from(new Set(semesters))
+    return uniqueSemesters
+  }
+
   useEffect(() => {
+    async function getSubjects() {
+      const response = await fetch('/api/subject')
+      if (response.ok) {
+        const subjects: Subject[] = await response.json()
+        setSubjects(subjects)
+        setSemesters(listOfSemesters(subjects))
+      }
+    }
     getSubjects()
   }, [])
-  async function getSubjects() {
-    const response = await fetch('/api/subject')
-    if (response.ok) {
-      const subjects: Subject[] = await response.json()
-      setSubjects(subjects)
-    }
-  }
   async function sendCreate() {
     const response = await fetch('/api/post', {
       method: 'POST',
@@ -52,9 +62,9 @@ export function SendCreate({
     setRefresh((prev) => !prev)
   }
   return (
-    <div>
+    <div className="grid gap-4 ">
       <Input placeholder="Title" name="title" ref={titleRef} />
-      <Input placeholder="Content" name="content" ref={contentRef} />
+      <Input placeholder="Drive link" name="content" ref={contentRef} />
 
       <Select onValueChange={setSubjectId}>
         <SelectTrigger className="w-[180px]">
@@ -62,22 +72,33 @@ export function SendCreate({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Semester 1</SelectLabel>
-            {
-              //todo: add dynamic data
-            }
-            {subjects.map((subject) => {
+            {semesters.map((semester) => {
               return (
-                <SelectItem key={subject.id} value={subject.id.toString()}>
-                  {subject.name}
-                </SelectItem>
+                <>
+                  <SelectLabel key={semester}>Semester {semester}</SelectLabel>
+                  {subjects.map((subject) => {
+                    if (subject.semester !== semester) {
+                      return null
+                    }
+                    return (
+                      <SelectItem
+                        key={subject.id}
+                        value={subject.id.toString()}
+                      >
+                        {subject.name}
+                      </SelectItem>
+                    )
+                  })}
+                </>
               )
             })}
           </SelectGroup>
         </SelectContent>
       </Select>
 
-      <Button onClick={sendCreate}>Create</Button>
+      <DialogFooter>
+        <Button onClick={sendCreate}>Create</Button>
+      </DialogFooter>
     </div>
   )
 }
