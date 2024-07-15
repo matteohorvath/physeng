@@ -24,14 +24,14 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { title, content, subjectId } = await request.json()
+  const { title, content, subjectId, type } = await request.json()
   if (user) {
     const post = await prisma.post.create({
       data: {
         title,
         content,
         subject: { connect: { id: parseInt(subjectId) } },
-        type: PostType.EXAM,
+        type: type as PostType,
         authorId: user.id,
       },
     })

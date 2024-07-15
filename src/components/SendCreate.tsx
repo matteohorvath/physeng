@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Subject } from '@prisma/client'
+import { PostType, Subject } from '@prisma/client'
 import { DialogFooter } from './ui/dialog'
 
 export function SendCreate({
@@ -22,6 +22,7 @@ export function SendCreate({
   const titleRef = useRef<HTMLInputElement>(null)
   const contentRef = useRef<HTMLInputElement>(null)
   const [subjectId, setSubjectId] = useState<string | null>(null)
+  const [type, setType] = useState<PostType>(PostType.EXAM)
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [semesters, setSemesters] = useState<number[]>([])
 
@@ -50,6 +51,7 @@ export function SendCreate({
         title: titleRef.current?.value,
         content: contentRef.current?.value,
         subjectId: subjectId,
+        type: type,
       }),
     })
     if (response.ok) {
@@ -96,7 +98,26 @@ export function SendCreate({
           </SelectGroup>
         </SelectContent>
       </Select>
-
+      <Select onValueChange={(value: string) => setType(value as PostType)}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select a Type" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {(Object.keys(PostType) as Array<keyof typeof PostType>).map(
+              (type) => (
+                <SelectItem key={type} value={type}>
+                  {type.toLowerCase()[0].toUpperCase() +
+                    type
+                      .toLowerCase()
+                      .substring(1, type.length)
+                      .replace('_', ' ')}
+                </SelectItem>
+              ),
+            )}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
       <DialogFooter>
         <Button onClick={sendCreate}>Create</Button>
       </DialogFooter>
