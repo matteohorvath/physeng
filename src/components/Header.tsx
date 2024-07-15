@@ -13,7 +13,7 @@ export default function Header() {
           <SupabaseLogo />
         </a>
         <span className="h-6 rotate-45 border-l" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
+        <a href="https://physeng.growmesh.io/" target="_blank" rel="noreferrer">
           <Image src="/logo.svg" alt="Physeng Logo" width={100} height={100} />
         </a>
       </div>
