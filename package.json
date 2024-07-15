@@ -27,6 +27,7 @@
     "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.2.3",
     "@next/bundle-analyzer": "^14.0.4",
     "@prisma/client": "5.16.2",
     "@radix-ui/react-dialog": "^1.1.1",

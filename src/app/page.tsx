@@ -9,6 +9,15 @@ import { cookies } from 'next/headers'
 import { createServerClient } from '@/utils/supabase'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
+
 export default async function Index() {
   const cookieStore = cookies()
   const supabase = createServerClient(cookieStore)
@@ -33,7 +42,14 @@ export default async function Index() {
               />
             </div>
           </div>
-          <AuthButton />
+          <ClerkProvider>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </ClerkProvider>
         </div>
       </nav>
       <div className="mx-12 max-w-4xl">
