@@ -36,6 +36,14 @@ export default async function Index() {
           <AuthButton />
         </div>
       </nav>
+      <div className="mx-12 max-w-4xl">
+        Hi!
+        <br /> This page has been created to share books, tests, exams, and
+        documents throughout the Physicist-Engineer course. Please refrain from
+        uploading inappropriate content, and give the shared files descriptive
+        names.
+      </div>
+
       {user && <Posts />}
       <footer className="w-full justify-center p-8 text-center text-xs">
         <div>

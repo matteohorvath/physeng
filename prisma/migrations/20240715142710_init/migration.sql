@@ -8,7 +8,7 @@ CREATE TABLE "public"."Post" (
     "content" TEXT NOT NULL,
     "subjectId" INTEGER NOT NULL,
     "type" "public"."PostType" NOT NULL,
-    "authorId" UUID NOT NULL,
+    "authorId" TEXT NOT NULL,
 
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
@@ -25,6 +25,3 @@ CREATE TABLE "public"."Subject" (
 
 -- AddForeignKey
 ALTER TABLE "public"."Post" ADD CONSTRAINT "Post_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "public"."Subject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "auth"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

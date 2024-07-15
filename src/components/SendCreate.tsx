@@ -27,7 +27,8 @@ export function SendCreate({
 
   function listOfSemesters(subjects: Subject[]) {
     const semesters = subjects.map((subject) => subject.semester)
-    const uniqueSemesters = Array.from(new Set(semesters))
+    //make array ascending
+    const uniqueSemesters = Array.from(new Set(semesters)).sort((a, b) => a - b)
     return uniqueSemesters
   }
 

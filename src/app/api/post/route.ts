@@ -6,7 +6,14 @@ import { createServerClient } from '@/utils/supabase'
 import { Post, PostType } from '@prisma/client'
 
 export async function GET(): Promise<NextResponse<Post[]>> {
-  const posts = await prisma.post.findMany({ include: { subject: true } })
+  const cookieStore = cookies()
+  const supabase = createServerClient(cookieStore)
+
+  const posts = await prisma.post.findMany({
+    include: { subject: true },
+    orderBy: { subject: { semester: 'desc' } },
+  })
+
   return NextResponse.json(posts)
 }
 export async function POST(request: Request) {
@@ -16,6 +23,7 @@ export async function POST(request: Request) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
   const { title, content, subjectId } = await request.json()
   if (user) {
     const post = await prisma.post.create({
