@@ -13,25 +13,43 @@ import {
 } from '@/components/ui/select'
 import { PostType, Subject } from '@prisma/client'
 import { DialogFooter } from './ui/dialog'
+import { z, ZodError } from 'zod'
+import { useForm } from 'react-hook-form'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+
+const formSchema = z.object({
+  title: z
+    .string()
+    .max(128, { message: 'Title is too long' })
+    .min(5, { message: 'Title is too short' }),
+  content: z
+    .string()
+    .max(1204, { message: 'Content is too long' })
+    .min(5, { message: 'Content is too short' }),
+  subjectId: z.string({ message: 'Subject is required' }),
+  type: z.nativeEnum(PostType, { message: 'Type is required' }),
+})
 
 export function SendCreate({
   setRefresh,
+  setOpen,
 }: {
   setRefresh: Dispatch<SetStateAction<boolean>>
+  setOpen: Dispatch<SetStateAction<boolean>>
 }) {
-  const titleRef = useRef<HTMLInputElement>(null)
-  const contentRef = useRef<HTMLInputElement>(null)
-  const [subjectId, setSubjectId] = useState<string | null>(null)
-  const [type, setType] = useState<PostType>(PostType.EXAM)
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [semesters, setSemesters] = useState<number[]>([])
-
-  function listOfSemesters(subjects: Subject[]) {
-    const semesters = subjects.map((subject) => subject.semester)
-    //make array ascending
-    const uniqueSemesters = Array.from(new Set(semesters)).sort((a, b) => a - b)
-    return uniqueSemesters
-  }
 
   useEffect(() => {
     async function getSubjects() {
@@ -44,83 +62,165 @@ export function SendCreate({
     }
     getSubjects()
   }, [])
-  async function sendCreate() {
+  function listOfSemesters(subjects: Subject[]) {
+    const semesters = subjects.map((subject) => subject.semester)
+    //make array ascending
+    const uniqueSemesters = Array.from(new Set(semesters)).sort((a, b) => a - b)
+    return uniqueSemesters
+  }
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const response = await fetch('/api/post', {
       method: 'POST',
       body: JSON.stringify({
-        title: titleRef.current?.value,
-        content: contentRef.current?.value,
-        subjectId: subjectId,
-        type: type,
+        title: values.title,
+        content: values.content,
+        subjectId: values.subjectId,
+        type: values.type,
       }),
     })
-    if (response.ok) {
-      if (titleRef.current) {
-        titleRef.current.value = ''
-      }
-      if (contentRef.current) {
-        contentRef.current.value = ''
-      }
+    if (!response.ok) {
+      const error = await response.json()
+      const zodError = ZodError.create(error)
+      console.log(zodError)
+      return
     }
+    form.reset()
     setRefresh((prev) => !prev)
+    //setOpen(false)
   }
-  return (
-    <div className="grid gap-4 ">
-      <Input placeholder="Title" name="title" ref={titleRef} />
-      <Input placeholder="Drive link" name="content" ref={contentRef} />
 
-      <Select onValueChange={setSubjectId}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a Subject" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {semesters.map((semester) => {
-              return (
-                <>
-                  <SelectLabel key={semester}>Semester {semester}</SelectLabel>
-                  {subjects.map((subject) => {
-                    if (subject.semester !== semester) {
-                      return null
-                    }
-                    return (
-                      <SelectItem
-                        key={subject.id}
-                        value={subject.id.toString()}
-                      >
-                        {subject.name}
-                      </SelectItem>
-                    )
-                  })}
-                </>
-              )
-            })}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <Select onValueChange={(value: string) => setType(value as PostType)}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a Type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {(Object.keys(PostType) as Array<keyof typeof PostType>).map(
-              (type) => (
-                <SelectItem key={type} value={type}>
-                  {type.toLowerCase()[0].toUpperCase() +
-                    type
-                      .toLowerCase()
-                      .substring(1, type.length)
-                      .replace('_', ' ')}
-                </SelectItem>
-              ),
-            )}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <DialogFooter>
-        <Button onClick={sendCreate}>Create</Button>
-      </DialogFooter>
-    </div>
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: '',
+      content: '',
+      subjectId: undefined,
+      type: undefined,
+    },
+  })
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Title..." {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the title of the post. It should be descriptive.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="content"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Content</FormLabel>
+              <FormControl>
+                <Input placeholder="Drive link" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the link to the content. It should be a Google Drive
+                link.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="subjectId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Subject</FormLabel>
+              <FormControl>
+                <Select
+                  {...field}
+                  onValueChange={(e) => {
+                    field.onChange(e)
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a Subject" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {semesters.map((semester) => {
+                        return (
+                          <>
+                            <SelectLabel key={semester}>
+                              Semester {semester}
+                            </SelectLabel>
+                            {subjects.map((subject) => {
+                              if (subject.semester !== semester) {
+                                return null
+                              }
+                              return (
+                                <SelectItem
+                                  key={subject.id}
+                                  value={subject.id.toString()}
+                                >
+                                  {subject.name}
+                                </SelectItem>
+                              )
+                            })}
+                          </>
+                        )
+                      })}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormDescription>
+                This is the subject of the post.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <Select {...field}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {(
+                        Object.keys(PostType) as Array<keyof typeof PostType>
+                      ).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type.toLowerCase()[0].toUpperCase() +
+                            type
+                              .toLowerCase()
+                              .substring(1, type.length)
+                              .replace('_', ' ')}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormDescription>This is the type of the post.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
   )
 }

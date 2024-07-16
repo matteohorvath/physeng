@@ -21,6 +21,7 @@ type PostWithSubject = Prisma.PostGetPayload<{
 export function Posts() {
   const [posts, setPosts] = useState<PostWithSubject[]>([])
   const [refresh, setRefresh] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     fetch('/api/post')
@@ -33,7 +34,7 @@ export function Posts() {
         <div className=" text- h-max grow-0 text-2xl">Posts</div>
         <div className="grow"></div>
         <div className="grow-0">
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">Create Post</Button>
             </DialogTrigger>
@@ -41,11 +42,11 @@ export function Posts() {
               <DialogHeader>
                 <DialogTitle>Add Post</DialogTitle>
                 <DialogDescription>
-                  Make changes to BLABLALBALBALB
+                  Please fill in the details to create a post
                 </DialogDescription>
               </DialogHeader>
 
-              <SendCreate setRefresh={setRefresh} />
+              <SendCreate setRefresh={setRefresh} setOpen={setOpen} />
             </DialogContent>
           </Dialog>
         </div>

@@ -1,5 +1,5 @@
 import AuthButton from '@/components/AuthButton'
-import ThemeToggle from '@/components/ThemeToggle'
+import { ModeToggle } from '@/components/ModeToggle'
 
 import { SendCreate } from '@/components/SendCreate'
 import { Post } from '@prisma/client'
@@ -18,6 +18,7 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs'
+import { Button } from '@/components/ui/button'
 
 export default async function Index() {
   return (
@@ -37,10 +38,12 @@ export default async function Index() {
             </div>
           </div>
           <SignedOut>
-            <SignInButton />
+            <SignInButton mode="modal">
+              <Button>Sign In</Button>
+            </SignInButton>
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <UserButton userProfileMode="modal" />
           </SignedIn>
         </div>
       </nav>
@@ -75,7 +78,7 @@ export default async function Index() {
           with ❤️ and ☕x6e23
         </div>
         <div className=" p-8">
-          <ThemeToggle />
+          <ModeToggle />
         </div>
       </footer>
     </div>
