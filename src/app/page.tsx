@@ -12,6 +12,7 @@ import Link from 'next/link'
 
 import {
   ClerkProvider,
+  SignIn,
   SignInButton,
   SignedIn,
   SignedOut,
@@ -19,13 +20,6 @@ import {
 } from '@clerk/nextjs'
 
 export default async function Index() {
-  const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-20">
       <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
@@ -42,14 +36,12 @@ export default async function Index() {
               />
             </div>
           </div>
-          <ClerkProvider>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </ClerkProvider>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </nav>
       <div className="mx-12 max-w-4xl">
@@ -59,8 +51,9 @@ export default async function Index() {
         uploading inappropriate content, and give the shared files descriptive
         names.
       </div>
-
-      {user && <Posts />}
+      <SignedIn>
+        <Posts />
+      </SignedIn>
       <footer className="w-full justify-center p-8 text-center text-xs">
         <div>
           Created by{' '}

@@ -4,11 +4,9 @@ import { NextResponse } from 'next/server'
 
 import { createServerClient } from '@/utils/supabase'
 import { Post, PostType } from '@prisma/client'
+import { auth } from '@clerk/nextjs/server'
 
 export async function GET(): Promise<NextResponse<Post[]>> {
-  const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
-
   const posts = await prisma.post.findMany({
     include: { subject: true },
     orderBy: { subject: { semester: 'desc' } },
@@ -20,19 +18,17 @@ export async function POST(request: Request) {
   const cookieStore = cookies()
   const supabase = createServerClient(cookieStore)
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { userId } = auth()
 
   const { title, content, subjectId, type } = await request.json()
-  if (user) {
+  if (userId) {
     const post = await prisma.post.create({
       data: {
         title,
         content,
         subject: { connect: { id: parseInt(subjectId) } },
         type: type as PostType,
-        authorId: user.id,
+        authorId: userId,
       },
     })
     return NextResponse.json({ post })
