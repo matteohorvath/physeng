@@ -22,9 +22,9 @@ import { Button } from '@/components/ui/button'
 
 export default async function Index() {
   return (
-    <div className="flex w-full flex-1 flex-col items-center gap-20">
+    <div className="flex w-full flex-1 flex-col items-center gap-10">
       <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
-        <div className="flex w-full max-w-4xl items-center justify-between p-3 text-sm">
+        <div className="mx-4 flex w-full max-w-4xl items-center justify-between text-sm lg:mx-0">
           <div className="flex items-center ">
             Physeng
             <div>
@@ -47,7 +47,7 @@ export default async function Index() {
           </SignedIn>
         </div>
       </nav>
-      <div className="mx-12 max-w-4xl">
+      <div className=" mx-4 max-w-4xl lg:mx-12">
         Hi!
         <br /> This page has been created to share books, tests, exams, and
         documents throughout the Physicist-Engineer course. Please refrain from
