@@ -1,4 +1,3 @@
-import AuthButton from '@/components/AuthButton'
 import { ModeToggle } from '@/components/ModeToggle'
 
 import { SendCreate } from '@/components/SendCreate'
@@ -14,6 +13,7 @@ import {
   ClerkProvider,
   SignIn,
   SignInButton,
+  SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
@@ -37,26 +37,36 @@ export default async function Index() {
               />
             </div>
           </div>
-          <SignedOut>
-            <SignInButton mode="modal">
-              <Button>Sign In</Button>
-            </SignInButton>
-          </SignedOut>
+
           <SignedIn>
             <UserButton userProfileMode="modal" />
           </SignedIn>
         </div>
       </nav>
-      <div className=" mx-4 max-w-4xl lg:mx-12">
-        Hi!
-        <br /> This page has been created to share books, tests, exams, and
-        documents throughout the Physicist-Engineer course. Please refrain from
-        uploading inappropriate content, and give the shared files descriptive
-        names.
-      </div>
+
       <SignedIn>
         <Posts />
       </SignedIn>
+      <SignedOut>
+        <div className="flex flex-col items-center gap-4">
+          <div className="text-center">
+            <h1 className="text-3xl">Welcome to Physeng</h1>
+            <p className="text-lg">
+              Physeng is a platform for sharing documents, exams, and tests
+              throughout the Physicist-Engineer course of BME.
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <SignUpButton mode="modal">
+              <Button>Sign Up</Button>
+            </SignUpButton>
+            or
+            <SignInButton mode="modal">
+              <Button variant="outline">Sign In</Button>
+            </SignInButton>
+          </div>
+        </div>
+      </SignedOut>
       <footer className="w-full justify-center p-8 text-center text-xs">
         <div>
           Created by{' '}
