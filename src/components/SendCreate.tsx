@@ -36,7 +36,17 @@ const formSchema = z.object({
   content: z
     .string()
     .max(1204, { message: 'Content is too long' })
-    .min(5, { message: 'Content is too short' }),
+    .min(5, { message: 'Content is too short' })
+    .url({ message: 'Content must be a valid URL' })
+    .refine(
+      (content) => {
+        return content.startsWith('http') || content.startsWith('https')
+      },
+      { message: 'URL should what with either http or https' },
+    )
+    .refine((content) => !content.includes(' '), {
+      message: 'Remove spaces from the content',
+    }),
   subjectId: z.string({ message: 'Subject is required' }),
   type: z.nativeEnum(PostType, { message: 'Type is required' }),
 })
