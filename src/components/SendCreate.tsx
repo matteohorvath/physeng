@@ -108,12 +108,12 @@ export function SendCreate({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Title</FormLabel>
+              <FormDescription>
+                The title of the post should be descriptive.
+              </FormDescription>
               <FormControl>
                 <Input placeholder="Title..." {...field} />
               </FormControl>
-              <FormDescription>
-                This is the title of the post. It should be descriptive.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -124,13 +124,12 @@ export function SendCreate({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Content</FormLabel>
-              <FormControl>
-                <Input placeholder="Drive link" {...field} />
-              </FormControl>
               <FormDescription>
-                This is the link to the content. It should be a Google Drive
-                link.
+                Link of content. (eg. Google Drive, Mega, Article etc.)
               </FormDescription>
+              <FormControl>
+                <Input placeholder="Link" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -179,9 +178,7 @@ export function SendCreate({
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormDescription>
-                This is the subject of the post.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -219,7 +216,7 @@ export function SendCreate({
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormDescription>This is the type of the post.</FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
