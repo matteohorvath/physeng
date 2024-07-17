@@ -86,7 +86,7 @@ export function SendCreate({
     }
     form.reset()
     setRefresh((prev) => !prev)
-    //setOpen(false)
+    setOpen(false)
   }
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -193,7 +193,12 @@ export function SendCreate({
             <FormItem>
               <FormLabel>Type</FormLabel>
               <FormControl>
-                <Select {...field}>
+                <Select
+                  {...field}
+                  onValueChange={(e) => {
+                    field.onChange(e)
+                  }}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a Type" />
                   </SelectTrigger>
