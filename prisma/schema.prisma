@@ -37,6 +37,8 @@ enum PostType {
   PROBLEM_SHEET
   TEST
   BOOK
+  LECTURE
+  NOTES
 
   @@schema("public")
 }
