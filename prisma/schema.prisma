@@ -1,0 +1,44 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["public"]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  subjectId Int
+  type      PostType
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  authorId  String
+
+  @@schema("public")
+}
+
+model Subject {
+  id       Int    @id @default(autoincrement())
+  name     String
+  code     String
+  semester Int
+  posts    Post[]
+
+  @@schema("public")
+}
+
+enum PostType {
+  EXAM
+  PROBLEM_SHEET
+  TEST
+  BOOK
+  LECTURE
+  NOTES
+
+  @@schema("public")
+}

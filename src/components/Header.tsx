@@ -1,6 +1,6 @@
 import NextLogo from './NextLogo'
 import SupabaseLogo from './SupabaseLogo'
-
+import Image from 'next/image'
 export default function Header() {
   return (
     <div className="flex flex-col items-center gap-16">
@@ -13,8 +13,8 @@ export default function Header() {
           <SupabaseLogo />
         </a>
         <span className="h-6 rotate-45 border-l" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-          <NextLogo />
+        <a href="https://physeng.growmesh.io/" target="_blank" rel="noreferrer">
+          <Image src="/logo.svg" alt="Physeng Logo" width={100} height={100} />
         </a>
       </div>
       <h1 className="sr-only">Supabase and Next.js Starter Template</h1>

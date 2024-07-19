@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
@@ -27,9 +27,15 @@
     "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.2.3",
+    "@hookform/resolvers": "^3.9.0",
     "@next/bundle-analyzer": "^14.0.4",
+    "@prisma/client": "5.16.2",
+    "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.0.2",
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.39.3",
@@ -44,10 +50,13 @@
     "next": "^14.1.0",
     "next-themes": "^0.2.1",
     "nextjs-toploader": "^1.6.4",
+    "posthog-js": "^1.148.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.52.1",
     "tailwind-merge": "^2.2.0",
-    "undici": "^5.28.2"
+    "undici": "^5.28.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@swc/core": "^1.3.102",
@@ -72,6 +81,7 @@
     "postcss": "8.4.29",
     "prettier": "^3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.10",
+    "prisma": "5.16.2",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.1.3"
