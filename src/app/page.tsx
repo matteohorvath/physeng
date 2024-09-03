@@ -69,6 +69,17 @@ export default async function Index() {
       </SignedOut>
       <footer className="w-full justify-center p-8 text-center text-xs">
         <div>
+          If you have any questions or feedback, feel free to reach out to{' '}
+          <Link
+            href="https://physeng.canny.io/"
+            target="_blank"
+            className="  text-red-500 underline"
+          >
+            us
+          </Link>
+        </div>
+
+        <div>
           Created by{' '}
           <Link
             href="https://www.linkedin.com/in/janos-mozer/"
